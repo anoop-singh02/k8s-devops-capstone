@@ -1,0 +1,21 @@
+# Minimal values for kube-prometheus-stack — sized for kind/demo EKS.
+# Install:
+#   helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+#   helm install monitoring prometheus-community/kube-prometheus-stack \
+#     -n monitoring --create-namespace -f monitoring/kube-prometheus-stack-values.yaml
+#   kubectl apply -f monitoring/alert-rules.yaml
+# Grafana: kubectl -n monitoring port-forward svc/monitoring-grafana 3000:80
+grafana:
+  adminPassword: admin # local/demo only — change or use existingSecret for anything shared
+prometheus:
+  prometheusSpec:
+    retention: 24h
+    resources:
+      requests:
+        cpu: 100m
+        memory: 512Mi
+    # Pick up PrometheusRule resources from any namespace with the
+    # release label (our alert-rules.yaml sets it).
+    ruleSelectorNilUsesHelmValues: false
+alertmanager:
+  enabled: true

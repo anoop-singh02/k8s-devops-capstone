@@ -1,0 +1,21 @@
+# Terraform
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+*.tfvars
+crash.log
+crash.*.log
+.terraform.lock.hcl
+
+# Deploy-time secrets — only the .example files are committed
+k8s/overlays/prod/secret.env
+k8s/overlays/prod/secret-api.env
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+*.db
+
+# OS
+.DS_Store

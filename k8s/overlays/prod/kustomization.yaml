@@ -1,0 +1,24 @@
+# EKS deployment. Images are pinned to ECR by the deploy workflow
+# (kustomize edit set image), and secrets come from secret.env — a file
+# that is gitignored and created from secret.env.example at deploy time.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../../base
+  - api-hpa.yaml
+secretGenerator:
+  - name: postgres-credentials
+    namespace: capstone
+    envs:
+      - secret.env
+  - name: api-database
+    namespace: capstone
+    envs:
+      - secret-api.env
+images:
+  - name: capstone-api
+    newName: REPLACED_BY_PIPELINE/capstone-api
+    newTag: latest
+  - name: capstone-frontend
+    newName: REPLACED_BY_PIPELINE/capstone-frontend
+    newTag: latest

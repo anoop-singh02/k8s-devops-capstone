@@ -1,0 +1,12 @@
+# kind cluster for local development: one control plane, one worker.
+# Port mapping exposes the frontend NodePort (30080) as localhost:8080.
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+name: capstone
+nodes:
+  - role: control-plane
+  - role: worker
+    extraPortMappings:
+      - containerPort: 30080
+        hostPort: 8080
+        protocol: TCP

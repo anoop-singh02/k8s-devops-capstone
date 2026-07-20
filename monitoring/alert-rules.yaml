@@ -1,0 +1,27 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: capstone-alerts
+  namespace: monitoring
+  labels:
+    release: monitoring
+spec:
+  groups:
+    - name: capstone
+      rules:
+        - alert: ApiPodsNotReady
+          expr: kube_deployment_status_replicas_available{namespace="capstone", deployment="api"} < 1
+          for: 2m
+          labels:
+            severity: critical
+          annotations:
+            summary: "No ready API pods in the capstone namespace"
+            description: "The api deployment has had zero available replicas for 2 minutes — the app is down."
+        - alert: PodRestartLoop
+          expr: increase(kube_pod_container_status_restarts_total{namespace="capstone"}[15m]) > 3
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Pod {{ $labels.pod }} is restart-looping"
+            description: "Container {{ $labels.container }} restarted more than 3 times in 15 minutes."

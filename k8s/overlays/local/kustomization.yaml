@@ -1,0 +1,21 @@
+# Local development on kind. Credentials here are throwaway values for
+# a cluster that only exists on your laptop — the prod overlay reads
+# real values from an untracked env file instead.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../../base
+secretGenerator:
+  - name: postgres-credentials
+    namespace: capstone
+    literals:
+      - POSTGRES_USER=app
+      - POSTGRES_PASSWORD=localdev-only
+      - POSTGRES_DB=tasks
+  - name: api-database
+    namespace: capstone
+    literals:
+      - DATABASE_URL=postgresql://app:localdev-only@postgres:5432/tasks
+patches:
+  - path: api-replicas.yaml
+  - path: frontend-nodeport.yaml
