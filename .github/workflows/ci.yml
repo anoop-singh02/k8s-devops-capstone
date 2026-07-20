@@ -35,7 +35,10 @@ jobs:
       - name: Build image
         run: docker build -t capstone-${{ matrix.image }}:${{ github.sha }} app/${{ matrix.image }}
       - name: Scan with Trivy
-        uses: aquasecurity/trivy-action@0.28.0
+        # Pinned to a commit SHA, not a tag: trivy-action had releases
+        # compromised in a 2026 supply-chain attack, and a SHA can't be
+        # silently rewritten the way a tag can.
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
         with:
           image-ref: capstone-${{ matrix.image }}:${{ github.sha }}
           severity: HIGH,CRITICAL
