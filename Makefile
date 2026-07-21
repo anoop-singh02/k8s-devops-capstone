@@ -16,8 +16,8 @@ kind-up:
 deploy-local: build
 	kind load docker-image capstone-api:dev capstone-frontend:dev --name $(CLUSTER)
 	kubectl apply -k k8s/overlays/local
-	kubectl -n capstone rollout status deployment/api --timeout=120s
-	kubectl -n capstone rollout status deployment/frontend --timeout=120s
+	kubectl -n capstone rollout status deployment/api --timeout=300s
+	kubectl -n capstone rollout status deployment/frontend --timeout=300s
 	@echo "App is up: http://localhost:8080"
 
 logs:

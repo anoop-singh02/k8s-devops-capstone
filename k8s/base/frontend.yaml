@@ -28,6 +28,11 @@ spec:
             allowPrivilegeEscalation: false
             capabilities:
               drop: ["ALL"]
+              # The stock nginx image starts as root, chowns its cache
+              # dirs, then setuids workers down to the nginx user.
+              # Dropping ALL took those away and crash-looped the pod;
+              # add back only the three it actually needs.
+              add: ["CHOWN", "SETGID", "SETUID"]
           resources:
             requests:
               cpu: 50m

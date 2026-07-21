@@ -17,6 +17,13 @@ spec:
     spec:
       securityContext:
         runAsNonRoot: true
+        # Explicit numeric UID: the image declares USER by name ("app"),
+        # and the kubelet cannot verify a named user is non-root — without
+        # this the pod fails with CreateContainerConfigError. fsGroup
+        # makes the /tmp emptyDir writable for gunicorn's heartbeat files.
+        runAsUser: 10001
+        runAsGroup: 10001
+        fsGroup: 10001
         seccompProfile:
           type: RuntimeDefault
       containers:
